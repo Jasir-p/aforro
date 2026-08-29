@@ -21,3 +21,4 @@ class Products(models.Model):
         on_delete=models.PROTECT,
         related_name="products"
     )
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -46,6 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "description",
             "price",
             "category",
+            "created_at"
         ]
 
     def validate_title(self, value):
@@ -82,4 +83,5 @@ class ProductsListSerializer(serializers.ModelSerializer):
             "description",
             "price",
             "category",
+            "created_at"
         ]
