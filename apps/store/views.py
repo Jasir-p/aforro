@@ -29,7 +29,7 @@ class InventoryCreateViews(views.APIView):
 class InventoryListView(views.APIView):
     permission_classes = [permissions.AllowAny]
 
-    def get(self, request,*args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
         store_id = self.kwargs["store_id"]
 
@@ -38,7 +38,7 @@ class InventoryListView(views.APIView):
         ).select_related(
             'product',
             'product__category'
-        )
+        ).order_by("product__title")
 
         serializer = InventoryListSerializer(inventory_data, many=True)
 

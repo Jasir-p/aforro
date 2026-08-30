@@ -1,5 +1,37 @@
 services:
 
+
+  django-web:
+    build: .
+    container_name: django-docker
+
+    command:
+      [
+        "daphne",
+        "-b",
+        "0.0.0.0",
+        "-p",
+        "8000",
+        "config.asgi:application"
+      ]
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/app
+
   db:
     image: postgres:17
     container_name: aforro_db
@@ -49,37 +81,19 @@ services:
       timeout: 5s
       retries: 5
 
+  celery:
+      build: .
+      command: celery -A config worker --loglevel=info
+      depends_on:
+        redis:
+          condition: service_healthy
+      restart: unless-stopped
+      env_file:
+        - .env
+      volumes:
+        - .:/app
 
-  django-web:
-    build: .
-    container_name: django-docker
 
-    command:
-      [
-        "daphne",
-        "-b",
-        "0.0.0.0",
-        "-p",
-        "8000",
-        "config.asgi:application"
-      ]
-
-    ports:
-      - "8000:8000"
-
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
-    restart: unless-stopped
-
-    env_file:
-      - .env
-
-    volumes:
-      - .:/app
 
 
 volumes:
