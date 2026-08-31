@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from rest_framework import views, viewsets,permissions,response,status
+from rest_framework import views, viewsets, permissions, response,status
 from .models import Store, Inventory
 from .serializers import StoreSerializer, InventorySerializer, InventoryListSerializer
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 
 # Create your views here.
 
@@ -28,7 +30,19 @@ class InventoryCreateViews(views.APIView):
 
 class InventoryListView(views.APIView):
     permission_classes = [permissions.AllowAny]
-
+    
+    @extend_schema(
+        summary="List Inventory",
+        description="Get inventory for a specific store.",
+        parameters=[
+            OpenApiParameter(
+                name="store_id",
+                type=int,
+                required=False,
+                description="Filter inventory by store ID",
+            ),
+        ],
+    )
     def get(self, request, *args, **kwargs):
 
         store_id = self.kwargs["store_id"]

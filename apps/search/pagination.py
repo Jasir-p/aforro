@@ -22,7 +22,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 
 
-def paginate_queryset_with_serializer(queryset, request, serializer_class, page_size=1):
+def paginate_queryset_with_serializer(queryset, request, serializer_class, page_size=20):
     """
     Paginate a queryset and return a paginated Response with serialized data.
     """

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.orders',
     'apps.search',
     "django_filters",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,21 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv("CACHE_REDIS_URL"),  # Use the appropriate Redis server URL
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Optional: This is to ensure Django sessions are stored in Redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
@@ -102,6 +118,16 @@ DATABASES = {
 }
 
 
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Aforro',
+    'DESCRIPTION': 'API documentation for Aforro',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'DEFAULT_GENERATE_UNSPECIFIED': False, 
+    # No SIDECAR needed
+}
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
